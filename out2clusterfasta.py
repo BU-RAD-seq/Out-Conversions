@@ -50,7 +50,7 @@ infile = open(args.i,'r')
 file = infile.read()
 num_clusters = file.count('Clstr')
 infile.close()
-print('Found '+str(num_clusters)+' clusters\n')
+print('Found '+str(num_clusters)+' clusters')
 
 #gather target clusters
 print('\nGathering target clusters')
@@ -79,7 +79,7 @@ for z in range(num_clusters):
                 outfile.write('>'+allele1[0]+'a\nN\n>'+allele1[0]+'b\nN\n')
                 infile.readline()
             elif int(allele1[7]) == 2:                                                      #if genotype code=2 (low depth)
-                outfile.write('>'+allele1[0]+'a\n>'+allele1[1]+'\n'+allele1[0]+'b\nN\n')
+                outfile.write('>'+allele1[0]+'a\n'+allele1[1]+'\n>'+allele1[0]+'b\nN\n')
                 infile.readline()
             else:
                 outfile.write('>'+allele1[0]+'a\n'+allele1[1]+'\n')
