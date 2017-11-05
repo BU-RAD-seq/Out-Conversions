@@ -2,7 +2,7 @@
 
 ##################################
 ##
-## out2fasta_list.py
+## out2fasta_list_for_manual_edits.py
 ##
 ## Version 1.00 -- 28 July 2017
 ##
