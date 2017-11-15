@@ -1,0 +1,17 @@
+The "sample info" file (-si parameter in scripts) gives information that is used in the conversion scripts in this repository. The file should be tab delimited with a header row and the following columns.
+
+A) order: this is the order in which samples appear in the out file. It is useful to have this column to easily re-sort the file if needed.
+
+B) sample: this is the sampleID as it appears in the out file.
+
+C) genus: genus of the sample. Not used by scripts but handy to include.
+
+D) species: species of the sample. Not used by scripts but handy to include.
+
+E) population: can be used to group samples into populations. Use a -9 if you want to skip a sample.
+
+F) sex: sex of the sample; use M for male, F for female, or U for unknown. Sex information is used when processing clusters on the Z chromosome.
+
+G) color: a code for the color you want to use for the sample in a plot in R (array of colors for samples of interest is printed by the out2getSNPs.py for use in downstream PCA).
+
+H) shape: a pch code for the symbol shape you want to use for the sample in a plot in R (array of pch for samples of interest is printed by the out2getSNPs.py for use in downstream PCA).
