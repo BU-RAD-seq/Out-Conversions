@@ -215,6 +215,7 @@ for x in range(num_clusters):
             elif sexarray[j] == 'F':
                 data = inf.readline().split()
                 locus_array.append([data[0],PopVector[j*2],data[1]])
+                locus_array.append([data[0],PopVector[j*2],'.'])
                 inf.readline()
             else:
                 print('Error: included sample has assigned sex other than M, F, or U')
