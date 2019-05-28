@@ -76,6 +76,11 @@ requiredParam.add_argument('-hemi', type=int, metavar='hemizygous_genotypes', re
                     'genotypes in phylip files. Applies only when na=2. If 1 then major allele will be written for low depth and '+
                     'flagged genotypes and second allele will contain a string of ?. If 0 then both alleles will contain a string '+
                     'of ?')
+
+optionalParam = parser.add_argument_group('optional parameters')
+optionalParam.add_argument('-miss', type=int, metavar='infofile', default=1, help='Write samples with missing data to cluster phylip files. '+
+                    '0=no; 1=yes [1]')
+
 args = parser.parse_args()
            
 #count number of clusters
@@ -157,90 +162,105 @@ for z in range(int(num_clusters)):
 
     #make appropriate sized string of ? for missing
     missing = max_length*'?'
-        
-    if args.na == 1:
-        #open and write header of individual cluster phylip file
-        phy_file = open(args.base+'_clstr_'+cluster+'.phy','w')
-        phy_file.write(str(incl_samples)+'\t'+str(max_length)+'\n')
-        
-    elif args.na == 2:
-        #open and write header of individual cluster phylip file
-        phy_file = open(args.base+'_clstr_'+cluster+'.phy','w')
-        phy_file.write(str(incl_samples*2)+'\t'+str(max_length)+'\n')
 
-    else:
-        print('\nERROR: number of alleles must equal 1 or 2!\n')
-
+    output = []
+        
     #randomly define allele 1 and 2, write to individual phylip file or append to concat file
     for i in range(int(incl_samples)):
         x = random.randint(1,2)
         if int(locus_array[i*2][7][0]) == 0:
             if args.na == 1:
-                phy_file.write(locus_array[i*2][0]+'\t'+missing+'\n')
+                if args.miss == 1:
+                    output.append(locus_array[i*2][0]+'\t'+missing+'\n')
                 concat[i] += missing
             else: #args.na == 2
-                phy_file.write(locus_array[i*2][0]+'a\t'+missing+'\n')
-                phy_file.write(locus_array[i*2+1][0]+'b\t'+missing+'\n')
+                if args.miss == 1:
+                    output.append(locus_array[i*2][0]+'a\t'+missing+'\n')
+                    output.append(locus_array[i*2+1][0]+'b\t'+missing+'\n')
                 concat[i*2] += missing
                 concat[i*2+1] += missing
         elif int(locus_array[i*2][7][0]) == 1:
             if x == 1:
                 if args.na == 1:
-                    phy_file.write(locus_array[i*2][0]+'\t'+locus_array[i*2][1]+'\n')
+                    output.append(locus_array[i*2][0]+'\t'+locus_array[i*2][1]+'\n')
                     concat[i] += locus_array[i*2][1]
                 else: #args.na == 2
-                    phy_file.write(locus_array[i*2][0]+'a\t'+locus_array[i*2][1]+'\n')
-                    phy_file.write(locus_array[i*2+1][0]+'b\t'+locus_array[i*2+1][1]+'\n')
+                    output.append(locus_array[i*2][0]+'a\t'+locus_array[i*2][1]+'\n')
+                    output.append(locus_array[i*2+1][0]+'b\t'+locus_array[i*2+1][1]+'\n')
                     concat[i*2] += locus_array[i*2][1]
                     concat[i*2+1] += locus_array[i*2+1][1]
             else:
                 if args.na == 1:
-                    phy_file.write(locus_array[i*2+1][0]+'\t'+locus_array[i*2+1][1]+'\n')
+                    output.append(locus_array[i*2+1][0]+'\t'+locus_array[i*2+1][1]+'\n')
                     concat[i] += locus_array[i*2+1][1]
                 else: #args.na == 2
-                    phy_file.write(locus_array[i*2+1][0]+'a\t'+locus_array[i*2+1][1]+'\n')
-                    phy_file.write(locus_array[i*2][0]+'b\t'+locus_array[i*2][1]+'\n')
+                    output.append(locus_array[i*2+1][0]+'a\t'+locus_array[i*2+1][1]+'\n')
+                    output.append(locus_array[i*2][0]+'b\t'+locus_array[i*2][1]+'\n')
                     concat[i*2+1] += locus_array[i*2+1][1]
                     concat[i*2] += locus_array[i*2][1]
         elif int(locus_array[i*2][7][0]) > 1:
             if x == 1:
                 if args.hemi == 0:
                     if args.na == 1:
-                        phy_file.write(locus_array[i*2][0]+'\t'+missing+'\n')
+                        if args.miss == 1:
+                            output.append(locus_array[i*2][0]+'\t'+missing+'\n')
                         concat[i] += missing
                     else: #args.na == 2
-                        phy_file.write(locus_array[i*2][0]+'a\t'+missing+'\n')
-                        phy_file.write(locus_array[i*2+1][0]+'b\t'+missing+'\n')
+                        if args.miss == 1:
+                            output.append(locus_array[i*2][0]+'a\t'+missing+'\n')
+                            output.append(locus_array[i*2+1][0]+'b\t'+missing+'\n')
                         concat[i*2] += missing
                         concat[i*2+1] += missing
                 else: #args.hemi == 1
                     if args.na == 1:
-                        phy_file.write(locus_array[i*2][0]+'\t'+locus_array[i*2][1]+'\n')
+                        output.append(locus_array[i*2][0]+'\t'+locus_array[i*2][1]+'\n')
                         concat[i] += locus_array[i*2][1]
                     else: #args.na == 2
-                        phy_file.write(locus_array[i*2][0]+'a\t'+locus_array[i*2][1]+'\n')
-                        phy_file.write(locus_array[i*2+1][0]+'b\t'+missing+'\n')
+                        output.append(locus_array[i*2][0]+'a\t'+locus_array[i*2][1]+'\n')
+                        if args.miss == 1:
+                            output.append(locus_array[i*2+1][0]+'b\t'+missing+'\n')
                         concat[i*2] += locus_array[i*2][1]
                         concat[i*2+1] += missing
             else:
                 if args.hemi == 0:
                     if args.na == 1:
-                        phy_file.write(locus_array[i*2][0]+'\t'+missing+'\n')
+                        if args.miss == 1:
+                            output.append(locus_array[i*2][0]+'\t'+missing+'\n')
                         concat[i] += +missing
                     else: #args.na == 2
-                        phy_file.write(locus_array[i*2][0]+'a\t'+missing+'\n')
-                        phy_file.write(locus_array[i*2+1][0]+'b\t'+missing+'\n')
+                        if args.miss == 1:
+                            output.append(locus_array[i*2][0]+'a\t'+missing+'\n')
+                            output.append(locus_array[i*2+1][0]+'b\t'+missing+'\n')
                         concat[i*2] += missing
                         concat[i*2+1] += missing
                 else: #args.hemi == 1
                     if args.na == 1:
-                        phy_file.write(locus_array[i*2][0]+'\t'+locus_array[i*2][1]+'\n')
+                        output.append(locus_array[i*2][0]+'\t'+locus_array[i*2][1]+'\n')
                         concat[i] += locus_array[i*2][1]
                     else: #args.na == 2
-                        phy_file.write(locus_array[i*2+1][0]+'a\t'+missing+'\n')
-                        phy_file.write(locus_array[i*2][0]+'b\t'+locus_array[i*2][1]+'\n')
+                        if args.miss == 1:
+                            output.append(locus_array[i*2+1][0]+'a\t'+missing+'\n')
+                        output.append(locus_array[i*2][0]+'b\t'+locus_array[i*2][1]+'\n')
                         concat[i*2] += missing
                         concat[i*2+1] += locus_array[i*2][1]
+
+    if args.na == 1:
+        #open and write header of individual cluster phylip file
+        phy_file = open(args.base+'_clstr_'+cluster+'.phy','w')
+        phy_file.write(str(len(output))+'\t'+str(max_length)+'\n')
+        for x in range(len(output)):
+            phy_file.write(output[x])
+        
+    elif args.na == 2:
+        #open and write header of individual cluster phylip file
+        phy_file = open(args.base+'_clstr_'+cluster+'.phy','w')
+        phy_file.write(str(len(output))+'\t'+str(max_length)+'\n')
+        for x in range(len(output)):
+            phy_file.write(output[x])
+
+    else:
+        print('\nERROR: number of alleles must equal 1 or 2!\n')
+
             
     #close individual phylip file
     phy_file.close()
