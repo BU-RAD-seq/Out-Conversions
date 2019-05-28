@@ -63,15 +63,16 @@ parser = argparse.ArgumentParser(description=
                                  'even the implied warranty of MERCHANTABILITY or FITNESS FOR A\n'+
                                  'PARTICULAR PURPOSE.', formatter_class=FlexiFormatter)
 
-parser.add_argument('-i', type=str, metavar='infile', required=True, help='Name of input .out file with selected clusters.')
-parser.add_argument('-base', type=str, metavar='basename', required=True, help='Base name of nexus files for individual clusters. '+
+requiredParam = parser.add_argument_group('required parameters')
+requiredParam.add_argument('-i', type=str, metavar='infile', required=True, help='Name of input .out file with selected clusters.')
+requiredParam.add_argument('-base', type=str, metavar='basename', required=True, help='Base name of nexus files for individual clusters. '+
                     'Names of these files will have the format basename_clstr_#.nex')
-parser.add_argument('-cat', type=str, metavar='catfile', required=True, help='Name of file with concatenated sequences.')
-parser.add_argument('-si', type=str, metavar='infofile', required=True, help='Name of sample info file.')
-parser.add_argument('-na', type=int, metavar='num_alleles', required=True, help='Number of alleles per sample to write to nexus file. '+
+requiredParam.add_argument('-cat', type=str, metavar='catfile', required=True, help='Name of file with concatenated sequences.')
+requiredParam.add_argument('-si', type=str, metavar='infofile', required=True, help='Name of sample info file.')
+requiredParam.add_argument('-na', type=int, metavar='num_alleles', required=True, help='Number of alleles per sample to write to nexus file. '+
                     '1=major allele for low depth or flagged genotypes, random draw of first or second allele for good genotypes; '+
                     '2=alleles  randomly assigned to an "a" or "b".')
-parser.add_argument('-hemi', type=int, metavar='hemizygous_genotypes', required=True, help='Allow (1) or do not allow (0) hemizygous '+
+requiredParam.add_argument('-hemi', type=int, metavar='hemizygous_genotypes', required=True, help='Allow (1) or do not allow (0) hemizygous '+
                     'genotypes in nexus files. Applies only when na=2. If 1 then major allele will be written for low depth and '+
                     'flagged genotypes and second allele will contain a string of ?. If 0 then both alleles will contain a string '+
                     'of ?')
